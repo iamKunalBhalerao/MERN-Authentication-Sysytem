@@ -6,9 +6,10 @@ import {
 } from "../services/auth.services.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 import { options } from "../config.js";
+import { ErrorHandler } from "../utils/authErrorHandler.js";
 
 // Signing in User
-const signin = async (req, res) => {
+const signin = async (req, res, next) => {
   try {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
@@ -36,14 +37,14 @@ const signin = async (req, res) => {
     const parseRequireBody = requireBody.safeParse(req.body);
 
     if (!parseRequireBody.success) {
-      throw "Invalid Credentials !!!";
+      throw new ErrorHandler("Invalid Credentials !!!", 400);
     }
 
     // Finding User is alredy exists or not
     const findUser = await findUserByEmailOrUsername(email, username);
 
     if (findUser) {
-      throw "User Alredy Exists !!!";
+      throw new ErrorHandler("User Alredy Exists !!!", 400);
     }
 
     // Hashing Password
@@ -62,15 +63,12 @@ const signin = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(400).json({
-      message: "Something Went Wrong While singing In User !!!",
-      Error: error,
-    });
+    next(error);
   }
 };
 
 // Signing Up User
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
   try {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
@@ -98,14 +96,14 @@ const signup = async (req, res) => {
     const parseRequireBody = requireBody.safeParse(req.body);
 
     if (!parseRequireBody.success) {
-      throw "Invalid Credentials !!!";
+      throw new ErrorHandler("Credentials Incorrect !!!", 400);
     }
 
     // Finding User is alredy exists or not
     const user = await findUserByEmailOrUsername(email, username);
 
     if (!user) {
-      throw "Username or Email does Not Exists !!!";
+      throw new ErrorHandler("Username or Email Does Not Exists !!!", 400);
     }
 
     // Compare Password
@@ -115,7 +113,7 @@ const signup = async (req, res) => {
     });
 
     if (!comparedPassword) {
-      throw "Invalid Password !!!";
+      throw new ErrorHandler("Invalid Password !!!", 400);
     }
 
     // Generate Tokens
@@ -139,10 +137,7 @@ const signup = async (req, res) => {
         RefreshToken,
       });
   } catch (error) {
-    res.status(400).json({
-      message: "Something Went Wrong While singing Up User !!!",
-      Error: error,
-    });
+    next(error);
   }
 };
 
