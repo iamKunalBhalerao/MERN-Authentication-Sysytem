@@ -119,7 +119,9 @@ const signup = async (req, res) => {
     }
 
     // Generate Tokens
-    const { AccessToken, RefreshToken } = generateAccessAndRefreshToken(user);
+    const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(
+      user
+    );
 
     // Updating RefreshToken in DB
     user.refreshToken = RefreshToken;
