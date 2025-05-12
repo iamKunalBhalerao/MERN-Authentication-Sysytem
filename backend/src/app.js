@@ -11,6 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
-app.use("/api/v1/user", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 export default app;
