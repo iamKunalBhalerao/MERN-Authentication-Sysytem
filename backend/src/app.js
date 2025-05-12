@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import UserRouter from "./routes/user.route.js";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -11,6 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
-app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/user", authRouter);
 
 export default app;
