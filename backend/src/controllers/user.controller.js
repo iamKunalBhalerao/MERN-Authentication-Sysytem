@@ -10,4 +10,16 @@ const signup = async (req, res) => {
   });
 };
 
-export { signin, signup };
+const logout = async (req, res) => {
+  res.status(200).json({
+    message: "This is Log Out Route",
+  });
+};
+
+const users = async (req, res) => {
+  res.status(200).json({
+    message: "This is Users Route",
+  });
+};
+
+export { signin, signup, logout, users };
