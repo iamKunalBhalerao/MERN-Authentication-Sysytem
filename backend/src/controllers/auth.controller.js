@@ -10,6 +10,13 @@ import { ErrorHandler } from "../utils/authErrorHandler.js";
 
 // Signing in User
 const signin = async (req, res, next) => {
+  // Gettting username, email and password from user
+  // validating inputs with zod validating libreary
+  // find user in DB with these credentials
+  // if available then throw message user is alredy exists
+  // if not then hash the password using bcrypt libreary
+  // create user in DB with user information with hashed password
+  // send user data as response
   try {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
@@ -69,6 +76,18 @@ const signin = async (req, res, next) => {
 
 // Signing Up User
 const signup = async (req, res, next) => {
+  // getting usernema, email and password from user
+  // validating user inputs by zod libreary
+  // check user is available in DB or not
+  // if not then send error user with these email or username is not Exists
+  // if user is exists in DB then
+  // compare user password with hashed password stored in DB with bcrypt librearys compare method
+  // if password is incorrect then send error password is incorrect
+  // if password is correct then
+  // generate Access and RefreshToken
+  // store Refresh Token in DB and
+  // Store both Access and Refresh Token in cookies
+  //  Send response
   try {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
