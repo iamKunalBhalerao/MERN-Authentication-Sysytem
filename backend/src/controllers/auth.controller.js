@@ -4,9 +4,10 @@ import {
   findUserByEmailOrUsername,
   generateAccessAndRefreshToken,
 } from "../services/auth.services.js";
-import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 import { options } from "../config.js";
 import { ErrorHandler } from "../utils/authErrorHandler.js";
+import { createTransporter } from "../utils/mail.handler.js";
+import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 
 // Signing in User
 const signin = async (req, res, next) => {
@@ -63,6 +64,35 @@ const signin = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
+
+    // Demo OTP
+    let verificationOtp = 123456;
+
+    // send verification email on user email
+    const verificationLink = `http://localhost:5173/verify-otp?userId=${user?._id}`;
+
+    // Mail Options
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user?.email,
+      subject: "Welcome to MERN Auth System",
+      text: `Welcome to MERN Authentication System, Your Account is Created with Username : ${user?.username} Email : ${user?.email}`,
+      html: `<b>Please Verify the Email with OTP : ${verificationOtp}. By Clicking </b><a href="${verificationLink}">Verify</a>`,
+    };
+
+
+    const transporter = await createTransporter();
+
+    if (!transporter) {
+      console.error(
+        "Email Not Sent: Transporter is null.  Check your SMTP credentials."
+      );
+      return false;
+    }
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: %s", info.messageId);
+
 
     res.status(200).json({
       error: false,
