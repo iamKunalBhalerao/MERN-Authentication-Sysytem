@@ -7,14 +7,6 @@ const findUserByEmailOrUsername = async (email, username) => {
   });
 };
 
-const createUser = async ({ username, email, password }) => {
-  return await User.create({
-    username,
-    email,
-    password,
-  });
-};
-
 const generateAccessAndRefreshToken = async (user) => {
   const AccessToken = await jwt.sign(
     {
@@ -36,4 +28,6 @@ const generateAccessAndRefreshToken = async (user) => {
   return { AccessToken, RefreshToken };
 };
 
-export { findUserByEmailOrUsername, createUser, generateAccessAndRefreshToken };
+
+
+export { findUserByEmailOrUsername, generateAccessAndRefreshToken };
