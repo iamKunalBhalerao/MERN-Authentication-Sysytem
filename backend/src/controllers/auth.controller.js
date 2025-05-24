@@ -1,4 +1,5 @@
 import zod from "zod";
+import jwt from "jsonwebtoken";
 import {
   findUserByEmailOrUsername,
   generateAccessAndRefreshToken,
@@ -171,6 +172,67 @@ const signup = async (req, res, next) => {
   }
 };
 
+const refreshToken = async (req, res, next) => {
+  try {
+    const refreshToken = res.cookie.refreshToken || req.body.refreshToken;
+    if (!refreshToken) {
+      throw new ErrorHandler("RefreshToken is Not found !!!", 404);
+    }
+
+    // verify the incoming refresh Token for that token and key is required
+
+    const { err, decoded } = await jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      function (err, decoded) {
+        return { err, decoded };
+      }
+    );
+
+    if (err) {
+      throw new ErrorHandler(`Invalid RefreshToken !!! ${err}`, 401);
+    }
+
+    const user = await User.findById(decoded?.data?._id);
+
+    if (!user) {
+      throw new ErrorHandler("User is no Found !!!", 404);
+    }
+
+    if (user?.refreshToken !== refreshToken) {
+      throw new ErrorHandler("Refresh Token is not Valid", 401);
+    }
+
+    console.log(err, decoded);
+
+    const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(
+      user
+    );
+
+    res
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options);
+
+    // Updating RefreshToken in DB
+    user.refreshToken = RefreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res
+      .status(200)
+      .cookie("accessToken", AccessToken, options)
+      .cookie("refreshToken", RefreshToken, options)
+      .json({
+        error: false,
+        message: "Access and Refresh Token is Updated Successfully",
+        user,
+        AccessToken,
+        RefreshToken,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const logout = async (req, res) => {
   res.status(200).json({
     message: "This is Log Out Route",
@@ -183,4 +245,4 @@ const users = async (req, res) => {
   });
 };
 
-export { signin, signup, logout, users };
+export { signin, signup, refreshToken, logout, users };

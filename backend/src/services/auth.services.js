@@ -28,6 +28,4 @@ const generateAccessAndRefreshToken = async (user) => {
   return { AccessToken, RefreshToken };
 };
 
-
-
 export { findUserByEmailOrUsername, generateAccessAndRefreshToken };
