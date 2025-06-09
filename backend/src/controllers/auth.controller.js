@@ -11,6 +11,24 @@ import { ErrorHandler } from "../utils/authErrorHandler.js";
 import { createTransporter } from "../utils/mail.handler.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 
+const findUserById = async (req, res, next) => {
+  const userId = req.params["userId"];
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ErrorHandler("User not Found !!!", 404);
+    }
+
+    res.status(200).json({
+      message: "User Fetched Successfully.",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Signing in User
 const signin = async (req, res, next) => {
   // Gettting username, email and password from user
@@ -172,6 +190,7 @@ const signup = async (req, res, next) => {
   }
 };
 
+// Refresh Access and Refresh Tokens
 const refreshToken = async (req, res, next) => {
   try {
     const refreshToken = res.cookie.refreshToken || req.body.refreshToken;
@@ -233,16 +252,18 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
+// Logout User
 const logout = async (req, res) => {
   res.status(200).json({
     message: "This is Log Out Route",
   });
 };
 
+// See All Users
 const users = async (req, res) => {
   res.status(200).json({
     message: "This is Users Route",
   });
 };
 
-export { signin, signup, refreshToken, logout, users };
+export { signin, signup, refreshToken, logout, users, findUserById };
