@@ -9,7 +9,7 @@ import User from "../models/user.model.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 
 // Signing in User
-const signin = async (req, res) => {
+const signup = async (req, res) => {
   // Gettting username, email and password from user
   // validating inputs with zod validating libreary
   // find user in DB with these credentials
@@ -28,7 +28,7 @@ const signin = async (req, res) => {
           required_error: "Username is Required !!!",
           invalid_type_error: "Username must be a String",
         })
-        .min(6)
+        .min(3)
         .max(50),
       email: zod
         .string({
@@ -72,7 +72,7 @@ const signin = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "You are Signed In Successfully.",
+      message: "You are Signed Up Successfully.",
       user,
     });
   } catch (error) {
@@ -85,7 +85,7 @@ const signin = async (req, res) => {
 };
 
 // Signing Up User
-const signup = async (req, res) => {
+const signin = async (req, res) => {
   // getting usernema, email and password from user
   // validating user inputs by zod libreary
   // check user is available in DB or not
@@ -109,7 +109,7 @@ const signup = async (req, res) => {
           required_error: "Username is Required !!!",
           invalid_type_error: "Username must be a String",
         })
-        .min(6)
+        .min(3)
         .max(50),
       email: zod
         .string({
@@ -172,7 +172,7 @@ const signup = async (req, res) => {
       .cookie("refreshToken", RefreshToken, options)
       .json({
         success: true,
-        message: "You are Signed Up Successfully.",
+        message: "You are Signed In Successfully.",
         user,
         AccessToken,
         RefreshToken,

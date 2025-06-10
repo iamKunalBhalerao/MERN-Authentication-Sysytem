@@ -20,13 +20,25 @@ const UserSchema = new Schema(
     refreshToken: {
       type: String,
     },
-    otp: {
+    verifyOtp: {
       type: String,
-      max: 6,
+      default: "",
+    },
+    verifyOtpExpireAt: {
+      type: Number,
+      default: 0,
     },
     emailVerified: {
       type: Boolean,
       default: false,
+    },
+    resetOtp: {
+      type: String,
+      default: "",
+    },
+    resetOtpExpireAt: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

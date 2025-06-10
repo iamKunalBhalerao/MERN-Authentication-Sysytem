@@ -1,4 +1,4 @@
-export const DBName = "newDB";
+export const DBName = "MERN-Auth";
 
 export const options = {
   httpOnly: true,
