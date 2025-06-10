@@ -4,7 +4,6 @@ const authRouter = Router();
 
 // Route Imports
 import {
-  findUserById,
   logout,
   refreshToken,
   signin,
@@ -19,6 +18,5 @@ authRouter.route("/signup").post(signup);
 authRouter.route("/logout").post(authMiddleware, logout);
 authRouter.route("/refreshtoken").post(refreshToken);
 authRouter.route("/users").get(users);
-authRouter.route("/user/:userId").get(findUserById);
 
 export default authRouter;

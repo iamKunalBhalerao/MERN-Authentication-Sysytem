@@ -6,31 +6,10 @@ import {
 } from "../services/auth.services.js";
 import { options } from "../config.js";
 import User from "../models/user.model.js";
-import { mailOptionsSender } from "../services/mail.services.js";
-import { ErrorHandler } from "../utils/authErrorHandler.js";
-import { createTransporter } from "../utils/mail.handler.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 
-const findUserById = async (req, res, next) => {
-  const userId = req.params["userId"];
-
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new ErrorHandler("User not Found !!!", 404);
-    }
-
-    res.status(200).json({
-      message: "User Fetched Successfully.",
-      user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 // Signing in User
-const signin = async (req, res, next) => {
+const signin = async (req, res) => {
   // Gettting username, email and password from user
   // validating inputs with zod validating libreary
   // find user in DB with these credentials
@@ -65,14 +44,20 @@ const signin = async (req, res, next) => {
     const parseRequireBody = requireBody.safeParse(req.body);
 
     if (!parseRequireBody.success) {
-      throw new ErrorHandler("Invalid Credentials !!!", 400);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Credentials !!!",
+      });
     }
 
     // Finding User is alredy exists or not
     const findUser = await findUserByEmailOrUsername(email, username);
 
     if (findUser) {
-      throw new ErrorHandler("User Alredy Exists !!!", 400);
+      return res.status(400).json({
+        success: false,
+        message: "User Alredy Exists !!!",
+      });
     }
 
     // Hashing Password
@@ -85,27 +70,22 @@ const signin = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    const verificationOtp = await mailOptionsSender(user);
-
-    user.otp = verificationOtp;
-    await user.save({ validateBeforeSave: false });
-
-    const updatedUser = await User.findById(user?._id).select(
-      "-password -refreshToken"
-    );
-
     res.status(200).json({
-      error: false,
+      success: true,
       message: "You are Signed In Successfully.",
-      updatedUser,
+      user,
     });
   } catch (error) {
-    next(error);
+    res.status(401).json({
+      success: false,
+      message: "Error While Creating User !!!",
+      Error: error,
+    });
   }
 };
 
 // Signing Up User
-const signup = async (req, res, next) => {
+const signup = async (req, res) => {
   // getting usernema, email and password from user
   // validating user inputs by zod libreary
   // check user is available in DB or not
@@ -139,20 +119,29 @@ const signup = async (req, res, next) => {
         .min(5)
         .max(150)
         .email(),
-      password: zod.string().min(6).max(200),
+      password: zod
+        .string()
+        .min(6, "Password must be 6 characters long.")
+        .max(200),
     });
 
     const parseRequireBody = requireBody.safeParse(req.body);
 
     if (!parseRequireBody.success) {
-      throw new ErrorHandler("Credentials Incorrect !!!", 400);
+      return res.status(400).json({
+        success: false,
+        message: "Credentials Incorrect !!!",
+      });
     }
 
     // Finding User is alredy exists or not
     const user = await findUserByEmailOrUsername(email, username);
 
     if (!user) {
-      throw new ErrorHandler("Username or Email Does Not Exists !!!", 400);
+      return res.status(400).json({
+        success: false,
+        message: "user with this Username or Email Does Not Exists !!!",
+      });
     }
 
     // Compare Password
@@ -162,7 +151,10 @@ const signup = async (req, res, next) => {
     });
 
     if (!comparedPassword) {
-      throw new ErrorHandler("Invalid Password !!!", 400);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password !!!",
+      });
     }
 
     // Generate Tokens
@@ -179,14 +171,18 @@ const signup = async (req, res, next) => {
       .cookie("accessToken", AccessToken, options)
       .cookie("refreshToken", RefreshToken, options)
       .json({
-        error: false,
+        success: true,
         message: "You are Signed Up Successfully.",
         user,
         AccessToken,
         RefreshToken,
       });
   } catch (error) {
-    next(error);
+    res.status(401).json({
+      success: false,
+      message: "Error While Loging in User !!!",
+      Error: error,
+    });
   }
 };
 
@@ -195,7 +191,10 @@ const refreshToken = async (req, res, next) => {
   try {
     const refreshToken = res.cookie.refreshToken || req.body.refreshToken;
     if (!refreshToken) {
-      throw new ErrorHandler("RefreshToken is Not found !!!", 404);
+      return res.status(404).json({
+        success: false,
+        message: "RefreshToken is Not found !!!",
+      });
     }
 
     // verify the incoming refresh Token for that token and key is required
@@ -209,17 +208,26 @@ const refreshToken = async (req, res, next) => {
     );
 
     if (err) {
-      throw new ErrorHandler(`Invalid RefreshToken !!! ${err}`, 401);
+      return res.status(401).json({
+        success: false,
+        message: `Invalid RefreshToken !!! ${err}`,
+      });
     }
 
     const user = await User.findById(decoded?.data?._id);
 
     if (!user) {
-      throw new ErrorHandler("User is no Found !!!", 404);
+      return res.status(404).json({
+        success: false,
+        message: "User is no Found !!!",
+      });
     }
 
     if (user?.refreshToken !== refreshToken) {
-      throw new ErrorHandler("Refresh Token is not Valid", 401);
+      return res.status(401).json({
+        success: false,
+        message: "Refresh Token is not Valid",
+      });
     }
 
     console.log(err, decoded);
@@ -248,7 +256,11 @@ const refreshToken = async (req, res, next) => {
         RefreshToken,
       });
   } catch (error) {
-    next(error);
+    res.status(401).json({
+      success: false,
+      message: "Error While refreshing Tokens !!!",
+      Error: error,
+    });
   }
 };
 
@@ -266,4 +278,4 @@ const users = async (req, res) => {
   });
 };
 
-export { signin, signup, refreshToken, logout, users, findUserById };
+export { signin, signup, refreshToken, logout, users };

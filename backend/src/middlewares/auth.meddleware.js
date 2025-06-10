@@ -1,13 +1,15 @@
 import jwt from "jsonwebtoken";
-import { ErrorHandler } from "../utils/authErrorHandler.js";
 
-export const authMiddleware = async (req, res, next) => {
+export const authMiddleware = async (req, res) => {
   try {
     const token =
       res.cookie?.accessToken || req.header("Authorization")?.split(" ")[1];
 
     if (!token) {
-      throw new ErrorHandler("Token is missing !!!", 404);
+      return res.status(404).json({
+        success: false,
+        message: "Token is missing !!!",
+      });
     }
 
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -18,6 +20,10 @@ export const authMiddleware = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    next(error);
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized Request !!!",
+      Error: error,
+    });
   }
 };
