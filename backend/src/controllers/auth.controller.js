@@ -70,11 +70,26 @@ const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.status(200).json({
-      success: true,
-      message: "You are Signed Up Successfully.",
-      user,
-    });
+    // Generate Tokens
+    const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(
+      user
+    );
+
+    // Updating RefreshToken in DB
+    user.refreshToken = RefreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res
+      .status(200)
+      .cookie("accessToken", AccessToken, options)
+      .cookie("refreshToken", RefreshToken, options)
+      .json({
+        success: true,
+        message: "You are Signed Up Successfully.",
+        user,
+        AccessToken,
+        RefreshToken,
+      });
   } catch (error) {
     res.status(401).json({
       success: false,
@@ -140,7 +155,7 @@ const signin = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "user with this Username or Email Does Not Exists !!!",
+        message: "Incorrect Email or Username !!!",
       });
     }
 
@@ -187,7 +202,7 @@ const signin = async (req, res) => {
 };
 
 // Refresh Access and Refresh Tokens
-const refreshToken = async (req, res, next) => {
+const refreshAccessAndRefreshTokens = async (req, res, next) => {
   try {
     const refreshToken = res.cookie.refreshToken || req.body.refreshToken;
     if (!refreshToken) {
@@ -226,19 +241,17 @@ const refreshToken = async (req, res, next) => {
     if (user?.refreshToken !== refreshToken) {
       return res.status(401).json({
         success: false,
-        message: "Refresh Token is not Valid",
+        message: "Refresh Token is expired or not Valid",
       });
     }
-
-    console.log(err, decoded);
-
-    const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(
-      user
-    );
 
     res
       .clearCookie("accessToken", options)
       .clearCookie("refreshToken", options);
+
+    const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(
+      user
+    );
 
     // Updating RefreshToken in DB
     user.refreshToken = RefreshToken;
@@ -266,16 +279,44 @@ const refreshToken = async (req, res, next) => {
 
 // Logout User
 const logout = async (req, res) => {
-  res.status(200).json({
-    message: "This is Log Out Route",
-  });
+  try {
+    await User.findByIdAndUpdate(req.userId, {
+      $set: {
+        refreshToken: undefined,
+      },
+    });
+    res
+      .status(200)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json({
+        success: true,
+        message: "User is Loged Out SuccessFully.",
+      });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Error While Loging Out User !!!",
+      Error: error,
+    });
+  }
 };
 
 // See All Users
 const users = async (req, res) => {
-  res.status(200).json({
-    message: "This is Users Route",
-  });
+  try {
+    const users = await User.find({});
+    res.status(200).json({
+      success: true,
+      message: "All Users Fetched Successfully.",
+      users,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Error While Fteching Users.",
+    });
+  }
 };
 
-export { signin, signup, refreshToken, logout, users };
+export { signin, signup, refreshAccessAndRefreshTokens, logout, users };

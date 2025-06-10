@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = async (req, res) => {
+export const authMiddleware = async (req, res, next) => {
   try {
     const token =
-      res.cookie?.accessToken || req.header("Authorization")?.split(" ")[1];
+      req.cookies?.accessToken || req.header("Authorization")?.split(" ")[1];
 
     if (!token) {
       return res.status(404).json({
@@ -13,7 +13,6 @@ export const authMiddleware = async (req, res) => {
     }
 
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log(decoded);
 
     if (decoded) {
       req.userId = decoded._id;
