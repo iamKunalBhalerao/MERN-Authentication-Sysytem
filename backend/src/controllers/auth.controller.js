@@ -4,9 +4,10 @@ import {
   findUserByEmailOrUsername,
   generateAccessAndRefreshToken,
 } from "../services/auth.services.js";
-import { options } from "../config.js";
+import { options, welcomeMailTemplate } from "../config.js";
 import User from "../models/user.model.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
+import sendMail from "../utils/nodemailer.js";
 
 // Signing in User
 const signup = async (req, res) => {
@@ -78,6 +79,28 @@ const signup = async (req, res) => {
     // Updating RefreshToken in DB
     user.refreshToken = RefreshToken;
     await user.save({ validateBeforeSave: false });
+
+    // Send Welcome Email
+
+    const mailHTML = await welcomeMailTemplate({
+      username: user?.username,
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "You're In! Welcome to Our MERN Auth System.",
+      text: `Welcome to Our MERN Auth System. You are Signed Up with Email: ${user?.email}`,
+      html: mailHTML,
+    };
+
+    const mailSentORNot = await sendMail(mailOptions);
+
+    if (!mailSentORNot) {
+      return res.status(402).json({
+        message: "Error While sending Mail !!!",
+      });
+    }
 
     res
       .status(200)

@@ -138,6 +138,5 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# html file
-
-index.html
+# mail design html file
+maildesign.html
