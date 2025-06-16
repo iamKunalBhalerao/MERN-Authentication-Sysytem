@@ -4,10 +4,11 @@ const authRouter = Router();
 
 // Route Imports
 import {
+  signup,
+  signin,
   logout,
   refreshAccessAndRefreshTokens,
-  signin,
-  signup,
+  sendVerificationOTP,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.meddleware.js";
 
@@ -15,6 +16,11 @@ import { authMiddleware } from "../middlewares/auth.meddleware.js";
 authRouter.route("/signin").post(signin);
 authRouter.route("/signup").post(signup);
 authRouter.route("/logout").post(authMiddleware, logout);
-authRouter.route("/refreshtoken").post(refreshAccessAndRefreshTokens);
+authRouter
+  .route("/refreshtoken")
+  .post(authMiddleware, refreshAccessAndRefreshTokens);
+authRouter
+  .route("/sendverificationotp")
+  .post(authMiddleware, sendVerificationOTP);
 
 export default authRouter;

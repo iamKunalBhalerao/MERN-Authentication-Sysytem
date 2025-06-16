@@ -4,7 +4,11 @@ import {
   findUserByEmailOrUsername,
   generateAccessAndRefreshToken,
 } from "../services/auth.services.js";
-import { options, welcomeMailTemplate } from "../config.js";
+import {
+  options,
+  verifyOTPMailTemplate,
+  welcomeMailTemplate,
+} from "../config.js";
 import User from "../models/user.model.js";
 import { comparePassword, hashPassword } from "../utils/auth.utils.js";
 import sendMail from "../utils/nodemailer.js";
@@ -337,4 +341,71 @@ const logout = async (req, res) => {
   }
 };
 
-export { signin, signup, refreshAccessAndRefreshTokens, logout };
+// Send Verification OTP
+const sendVerificationOTP = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const user = await User.findById(userId).select("-password -refreshToken");
+
+    if (!user) {
+      return res.staus(404).json({
+        success: false,
+        message: "User Not Found !!!",
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(202).json({
+        success: false,
+        message: "User is Alredy Verified.",
+      });
+    }
+
+    const generateOTP = Math.floor(
+      Math.random() * (999999 - 100000 + 1) + 100000
+    ).toString();
+
+    user.verifyOtp = generateOTP;
+    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+    await user.save({ validateBeforeSave: false });
+
+    const otpHTML = await verifyOTPMailTemplate(generateOTP);
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Your Verification OTP. Welcome to Our MERN Auth System.",
+      text: `Welcome to Our MERN Auth System. Your verification OTP is : ${generateOTP}`,
+      html: otpHTML,
+    };
+
+    const mailSentORNot = await sendMail(mailOptions);
+
+    if (!mailSentORNot) {
+      return res.status(402).json({
+        message: "Error While sending Mail !!!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Verification OTP sent Successfully to Email.",
+      user,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Error While Sending Verification OPT to User !!!",
+      Error: error,
+    });
+  }
+};
+
+export {
+  signin,
+  signup,
+  refreshAccessAndRefreshTokens,
+  logout,
+  sendVerificationOTP,
+};
