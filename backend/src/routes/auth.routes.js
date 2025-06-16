@@ -9,6 +9,7 @@ import {
   logout,
   refreshAccessAndRefreshTokens,
   sendVerificationOTP,
+  verifyOTPandEmail,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.meddleware.js";
 
@@ -22,5 +23,6 @@ authRouter
 authRouter
   .route("/sendverificationotp")
   .post(authMiddleware, sendVerificationOTP);
+authRouter.route("/verifyotp").post(authMiddleware, verifyOTPandEmail);
 
 export default authRouter;

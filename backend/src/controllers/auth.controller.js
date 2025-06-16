@@ -391,6 +391,7 @@ const sendVerificationOTP = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Verification OTP sent Successfully to Email.",
+      generateOTP,
       user,
     });
   } catch (error) {
@@ -402,10 +403,52 @@ const sendVerificationOTP = async (req, res) => {
   }
 };
 
+// Verify the OTP gived by user
+const verifyOTPandEmail = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const commingOTP = req.body.otp;
+
+    const user = await User.findById(userId).select("-password -refreshToken");
+
+    if (user.verifyOtp === "" || commingOTP !== user.verifyOtp) {
+      return res.status(403).json({
+        success: false,
+        message: "Otp is INCORRECT !!!",
+      });
+    }
+
+    if (user.verifyOtpExpireAt < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has been EXPIRED !!! resend the OTP please.",
+      });
+    }
+
+    user.emailVerified = true;
+    user.verifyOtp = "";
+    user.verifyOtpExpireAt = 0;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      message: "Your Email is verifyed Successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Error While Verifying OTP !!!",
+      Error: error,
+    });
+  }
+};
+
 export {
   signin,
   signup,
   refreshAccessAndRefreshTokens,
   logout,
   sendVerificationOTP,
+  verifyOTPandEmail,
 };
