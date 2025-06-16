@@ -22,6 +22,12 @@ const signup = async (req, res) => {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
 
+    if (!username || !email || !password) {
+      return res.status(402).json({
+        message: "All Fields are REQUIRED !!!",
+      });
+    }
+
     // Validating User Inputs
     const requireBody = zod.object({
       username: zod
@@ -140,6 +146,12 @@ const signin = async (req, res) => {
     // Taking inputs from body by user
     const { username, email, password } = req.body;
 
+    if (!username || !email || !password) {
+      return res.status(402).json({
+        message: "All Fields are REQUIRED !!!",
+      });
+    }
+
     // Validating User Inputs
     const requireBody = zod.object({
       username: zod
@@ -225,7 +237,7 @@ const signin = async (req, res) => {
 };
 
 // Refresh Access and Refresh Tokens
-const refreshAccessAndRefreshTokens = async (req, res, next) => {
+const refreshAccessAndRefreshTokens = async (req, res) => {
   try {
     const refreshToken = res.cookie.refreshToken || req.body.refreshToken;
     if (!refreshToken) {
@@ -325,21 +337,4 @@ const logout = async (req, res) => {
   }
 };
 
-// See All Users
-const users = async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.status(200).json({
-      success: true,
-      message: "All Users Fetched Successfully.",
-      users,
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Error While Fteching Users.",
-    });
-  }
-};
-
-export { signin, signup, refreshAccessAndRefreshTokens, logout, users };
+export { signin, signup, refreshAccessAndRefreshTokens, logout };
