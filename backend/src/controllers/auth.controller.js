@@ -444,6 +444,21 @@ const verifyOTPandEmail = async (req, res) => {
   }
 };
 
+// CHect if user is Authenticated or Not
+const isAuthenticated = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "User is Authenticated",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "User iw NOT AUTHENTICATED !!!",
+      Error: error,
+    });
+  }
+};
+
 export {
   signin,
   signup,
@@ -451,4 +466,5 @@ export {
   logout,
   sendVerificationOTP,
   verifyOTPandEmail,
+  isAuthenticated,
 };

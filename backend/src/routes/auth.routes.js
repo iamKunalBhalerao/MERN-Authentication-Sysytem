@@ -10,6 +10,7 @@ import {
   refreshAccessAndRefreshTokens,
   sendVerificationOTP,
   verifyOTPandEmail,
+  isAuthenticated,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.meddleware.js";
 
@@ -24,5 +25,6 @@ authRouter
   .route("/sendverificationotp")
   .post(authMiddleware, sendVerificationOTP);
 authRouter.route("/verifyotp").post(authMiddleware, verifyOTPandEmail);
+authRouter.route("/is-auth").get(authMiddleware, isAuthenticated);
 
 export default authRouter;
