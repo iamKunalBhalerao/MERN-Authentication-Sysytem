@@ -6,6 +6,7 @@ import {
 } from "../services/auth.services.js";
 import {
   options,
+  resetOTPMailTemplate,
   verifyOTPMailTemplate,
   welcomeMailTemplate,
 } from "../config.js";
@@ -392,7 +393,6 @@ const sendVerificationOTP = async (req, res) => {
       success: true,
       message: "Verification OTP sent Successfully to Email.",
       generateOTP,
-      user,
     });
   } catch (error) {
     res.status(401).json({
@@ -459,6 +459,56 @@ const isAuthenticated = async (req, res) => {
   }
 };
 
+// Send Reset Password otp
+const resetPasswordOtp = async (req, res) => {
+  try {
+    const email = req.body.email;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not Found" });
+    }
+
+    const generateOTP = Math.floor(
+      Math.random() * (999999 - 100000 + 1) + 100000
+    ).toString();
+
+    user.resetOtp = generateOTP;
+    user.resetOtpExpireAt = Date.now() + 15 * 60 * 1000;
+    await user.save({ validateBeforeSave: false });
+
+    const resetOtpHTML = await resetOTPMailTemplate(generateOTP);
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Your Verification OTP. Welcome to Our MERN Auth System.",
+      text: `Welcome to Our MERN Auth System. Your verification OTP is : ${generateOTP}`,
+      html: resetOtpHTML,
+    };
+
+    const mailSentORNot = await sendMail(mailOptions);
+
+    if (!mailSentORNot) {
+      return res.status(402).json({
+        message: "Error While sending Mail !!!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Reset OTP sent Successfully to Email.",
+      generatedRestOTP: generateOTP,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Error While Sending Reset Password OTP !!!",
+      Error: error,
+    });
+  }
+};
+
 export {
   signin,
   signup,
@@ -467,4 +517,5 @@ export {
   sendVerificationOTP,
   verifyOTPandEmail,
   isAuthenticated,
+  resetPasswordOtp,
 };

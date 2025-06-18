@@ -212,3 +212,101 @@ export const verifyOTPMailTemplate = (otp) => {
     `;
   return otpHTML;
 };
+
+export const resetOTPMailTemplate = (otp) => {
+  const resetOtpHTML = `
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+</head>
+
+<body
+  style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+          style="max-width: 400px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+
+          <!-- Header -->
+          <tr>
+            <td style="padding: 32px 24px 24px; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #1e293b;">
+                Reset Your Password
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 0 24px 32px; text-align: center;">
+              <p style="margin: 0 0 24px; font-size: 16px; color: #475569;">
+                Enter this verification code:
+              </p>
+
+              <!-- Enhanced OTP Code Section -->
+              <div style="margin: 0 0 32px;">
+                <!-- OTP Container with gradient background -->
+                <div
+                  style="display: inline-block; padding: 24px 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3); position: relative; margin: 0 0 16px;">
+                  <!-- Decorative elements -->
+                  <div
+                    style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(135deg, #667eea, #764ba2, #f093fb); border-radius: 18px; z-index: -1; opacity: 0.1;">
+                  </div>
+
+                  <!-- OTP Code -->
+                  <div
+                    style="background-color: rgba(255, 255, 255, 0.95); padding: 20px 24px; border-radius: 12px; backdrop-filter: blur(10px);">
+                    <span
+                      style="font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #1e293b; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                      ${otp}
+                    </span>
+                  </div>
+
+                  <!-- Subtle glow effect -->
+                  <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: 120%; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 20px; z-index: -1;">
+                  </div>
+                </div>
+
+                <!-- Enhanced instruction text -->
+                <div style="margin-top: 16px;">
+                  <div
+                    style="display: inline-flex; align-items: center; background-color: #f0f9ff; padding: 8px 16px; border-radius: 20px; border: 1px solid #e0f2fe;">
+                    <span
+                      style="width: 8px; height: 8px; background-color: #0ea5e9; border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite;"></span>
+                    <span style="font-size: 13px; color: #0369a1; font-weight: 500;">
+                      Enter the code above to verify
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p style="margin: 0; font-size: 14px; color: #64748b;">
+                This code expires in 15 minute.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Simple Footer -->
+          <tr>
+            <td
+              style="padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; background-color: #f8fafc;">
+              <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+                If you didn't request this, ignore this email.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>`;
+  return resetOtpHTML;
+};
