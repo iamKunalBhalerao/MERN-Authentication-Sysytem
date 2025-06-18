@@ -460,9 +460,15 @@ const isAuthenticated = async (req, res) => {
 };
 
 // Send Reset Password otp
-const resetPasswordOtp = async (req, res) => {
+const sendResetPasswordOtp = async (req, res) => {
   try {
     const email = req.body.email;
+
+    if (!email) {
+      return res.status(404).json({
+        message: "Email is Required !!!",
+      });
+    }
 
     const user = await User.findOne({ email });
 
@@ -509,6 +515,56 @@ const resetPasswordOtp = async (req, res) => {
   }
 };
 
+// Verify the Reset OTP gived by user
+const verifyResetOTP = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(401).json({
+        message: "Email, Otp ans New Password is Required !!!",
+      });
+    }
+
+    const user = await User.findOne({ email }).select(
+      "-password -refreshToken"
+    );
+
+    if (user.resetOtp === "" || otp !== user.resetOtp) {
+      return res.status(403).json({
+        success: false,
+        message: "Otp is INCORRECT !!!",
+      });
+    }
+
+    if (user.resetOtpExpireAt < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has been EXPIRED !!! resend the OTP please.",
+      });
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    user.password = hashedPassword;
+    user.resetOtp = "";
+    user.resetOtpExpireAt = 0;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Your Reset Password OTP verifyed Successfully, Your Password is reset successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Error While Verifying Reset OTP !!!",
+      Error: error,
+    });
+  }
+};
+
 export {
   signin,
   signup,
@@ -517,5 +573,6 @@ export {
   sendVerificationOTP,
   verifyOTPandEmail,
   isAuthenticated,
-  resetPasswordOtp,
+  sendResetPasswordOtp,
+  verifyResetOTP,
 };

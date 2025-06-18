@@ -11,7 +11,8 @@ import {
   sendVerificationOTP,
   verifyOTPandEmail,
   isAuthenticated,
-  resetPasswordOtp,
+  sendResetPasswordOtp,
+  verifyResetOTP,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.meddleware.js";
 
@@ -27,6 +28,9 @@ authRouter
   .post(authMiddleware, sendVerificationOTP);
 authRouter.route("/verifyotp").post(authMiddleware, verifyOTPandEmail);
 authRouter.route("/is-auth").get(authMiddleware, isAuthenticated);
-authRouter.route("/reset-password").post(authMiddleware, resetPasswordOtp);
+authRouter.route("/sendresetotp").post(authMiddleware, sendResetPasswordOtp);
+authRouter
+  .route("/verifyotpandresetpassword")
+  .post(authMiddleware, verifyResetOTP);
 
 export default authRouter;
