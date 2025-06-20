@@ -6,7 +6,7 @@ const Button = ({ lable, onClick, to }) => {
     <>
       <Link to={to}>
         <button
-          className="w-full p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xl mt-2 cursor-pointer"
+          className="w-full py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xl cursor-pointer"
           onClick={onClick}
         >
           {lable}
