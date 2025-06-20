@@ -1,15 +1,22 @@
 import React from "react";
-import Button from "./Button";
 import { assets } from "../assets/assets";
+import HomeButtons from "./HomeButtons";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <>
-      <nav className="flex justify-between items-center py-3 px-6 shadow">
+      <nav className="w-full bg-transparent flex fixed justify-between items-center py-3 px-6">
         <img src={assets.logo} alt="logo" className="w-28 sm:w-32" />
         <div className="flex items-center justify-center gap-2">
-          <Button lable={"Sign Up"} to={"/signup"} />
-          <Button lable={"Sign In"} to={"/signin"} />
+          <HomeButtons
+            onClick={() => {
+              navigate("/signin");
+            }}
+            lable={"Sign In"}
+            to={"/signin"}
+          />
         </div>
       </nav>
     </>
