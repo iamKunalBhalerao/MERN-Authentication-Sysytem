@@ -5,7 +5,7 @@ const Home = () => {
     <>
       <main>
         <h1 className="text-4xl font-black text-blue-950 ">
-          This is Main Content
+          This is Home Page
         </h1>
       </main>
     </>
