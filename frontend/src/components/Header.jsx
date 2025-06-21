@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../assets/assets";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HomeButtons from "./HomeButtons";
+import { AppContext } from "../context/AppContext";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const { userData } = useContext(AppContext);
+
   return (
     <>
       <div className="w-full h-screen  bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 flex flex-col gap-2 p-4 justify-center items-center">
@@ -14,7 +18,7 @@ const Header = () => {
           className="w-36 h-36 rounded-full mb-6"
         />
         <h1 className="flex gap-2 items-center text-2xl font-semibold text-center">
-          Hey Developer{" "}
+          Hey {userData ? userData.userName : "Developer"}
           <img
             src={assets.hand_wave}
             alt="Hello"

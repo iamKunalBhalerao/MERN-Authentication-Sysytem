@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../components/Input";
 import AuthHeading from "../components/AuthHeading";
 import AuthSubHeading from "../components/AuthSubHeading";
@@ -7,6 +7,7 @@ import BottomWarning from "../components/BottomWarning";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -14,8 +15,11 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const { setIsLoggedIn, getUserData } = useContext(AppContext);
+
   async function signupHandler() {
     try {
+      axios.defaults.withCredentials = true;
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/auth/signup",
         {
@@ -26,6 +30,8 @@ const Signup = () => {
       );
       toast.success(data.message);
       localStorage.setItem("AccessToken", data.AccessToken);
+      setIsLoggedIn(true);
+      getUserData();
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {

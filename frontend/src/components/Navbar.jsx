@@ -1,22 +1,44 @@
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import HomeButtons from "./HomeButtons";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const { isLoggedIn, userData, setUserData } = useContext(AppContext);
+
   return (
     <>
       <nav className="w-full bg-transparent flex fixed justify-between items-center py-3 px-6">
         <img src={assets.logo} alt="logo" className="w-28 sm:w-32" />
         <div className="flex items-center justify-center gap-2">
-          <HomeButtons
-            onClick={() => {
-              navigate("/signin");
-            }}
-            lable={"Sign In"}
-            to={"/signin"}
-          />
+          {userData ? (
+            <div className="w-8 h-8 flex justify-center items-center rounded-full bg-blue-500 text-white group">
+              {userData.userName[0].toUpperCase()}
+              <div className="absolute hidden group-hover:block top-2 right-2 z-10 text-black rounded-lg pt-10">
+                <ul className="list-none m-0 p-2 bg-gray-100 text-sm rounded-lg">
+                  {!userData.IsemailVerified && (
+                    <li className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md">
+                      Verify Email
+                    </li>
+                  )}
+                  <li className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md ">
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <HomeButtons
+              onClick={() => {
+                navigate("/signin");
+              }}
+              lable={"Sign In"}
+              to={"/signin"}
+            />
+          )}
         </div>
       </nav>
     </>

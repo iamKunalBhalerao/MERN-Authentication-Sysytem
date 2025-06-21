@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthHeading from "../components/AuthHeading";
 import AuthSubHeading from "../components/AuthSubHeading";
 import Input from "../components/Input";
@@ -7,14 +7,18 @@ import BottomWarning from "../components/BottomWarning";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContext";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const { setIsLoggedIn, getUserData } = useContext(AppContext);
+
   async function signInHandler() {
     try {
+      axios.defaults.withCredentials = true;
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/auth/signin",
         {
@@ -26,6 +30,8 @@ const Signin = () => {
       if (localStorage.getItem("AccessToken")) {
         localStorage.removeItem("AccessToken");
         localStorage.setItem("AccessToken", data.AccessToken);
+        setIsLoggedIn(true);
+        getUserData();
         navigate("/");
       } else {
         localStorage.setItem("AccessToken", data.AccessToken);

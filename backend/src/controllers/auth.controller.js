@@ -447,7 +447,8 @@ const isAuthenticated = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({
-      message: "User iw NOT AUTHENTICATED !!!",
+      success: false,
+      message: "User is NOT AUTHENTICATED !!!",
       Error: error,
     });
   }
