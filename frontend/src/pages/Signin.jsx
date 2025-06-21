@@ -67,7 +67,10 @@ const Signin = () => {
               setPassword(e.target.value);
             }}
           />
-          <BottomWarning buttontxt={"Forgot Password ?"} to={"/signup"} />
+          <BottomWarning
+            buttontxt={"Forgot Password ?"}
+            to={"/resetpassword"}
+          />
 
           <Button lable={"Continue"} onClick={signInHandler} />
           <BottomWarning

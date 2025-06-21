@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Account from "./pages/Account";
 import VerifyMail from "./pages/VerifyMail";
+import ResetPassword from "./pages/ResetPassword";
 
 import { ToastContainer } from "react-toastify";
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/account" element={<Account />} />
         <Route path="/verifymail" element={<VerifyMail />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
       </Routes>
     </>
   );

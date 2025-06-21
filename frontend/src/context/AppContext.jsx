@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState("");
   const [userData, setUserData] = useState(false);
 
   axios.defaults.withCredentials = true;
@@ -18,9 +18,11 @@ export const AppContextProvider = (props) => {
       if (data.success) {
         setIsLoggedIn(true);
         getUserData();
+      } else {
+        toast.success("Welcome to our website");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error);
     }
   };
 

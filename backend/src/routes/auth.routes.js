@@ -28,9 +28,7 @@ authRouter
   .post(authMiddleware, sendVerificationOTP);
 authRouter.route("/verifyotp").post(authMiddleware, verifyOTPandEmail);
 authRouter.route("/is-auth").get(authMiddleware, isAuthenticated);
-authRouter.route("/sendresetotp").post(authMiddleware, sendResetPasswordOtp);
-authRouter
-  .route("/verifyotpandresetpassword")
-  .post(authMiddleware, verifyResetOTP);
+authRouter.route("/sendresetotp").post(sendResetPasswordOtp);
+authRouter.route("/verifyotpandresetpassword").post(verifyResetOTP);
 
 export default authRouter;
