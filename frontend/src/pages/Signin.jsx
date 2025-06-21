@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthHeading from "../components/AuthHeading";
 import AuthSubHeading from "../components/AuthSubHeading";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import BottomWarning from "../components/BottomWarning";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const signInHandler = async () => {
+    await axios
+      .post("http://localhost:3000/api/v1/auth/signin", {
+        email,
+        password,
+      })
+      .then((response) => {
+        localStorage.setItem("accessToken", response.data.AccessToken);
+        navigate("/");
+      });
+    navigate("/");
+  };
+
   return (
     <>
       <div className="h-screen p-4 bg-zinc-200 flex justify-center items-center">
@@ -19,7 +38,7 @@ const Signin = () => {
             type={"email"}
             placeholder={"example@gmail.com"}
             onChange={(e) => {
-              console.log(e.target.value);
+              setEmail(e.target.value);
             }}
           />
           <Input
@@ -27,16 +46,12 @@ const Signin = () => {
             type={"password"}
             placeholder={"password"}
             onChange={(e) => {
-              console.log(e.target.value);
+              setPassword(e.target.value);
             }}
           />
-          <Button
-            lable={"Continue"}
-            onClick={() => {
-              console.log("You are Signed Up Successfully");
-            }}
-            to={"/"}
-          />
+          <BottomWarning buttontxt={"Forgot Password ?"} to={"/signup"} />
+
+          <Button lable={"Continue"} onClick={signInHandler} />
           <BottomWarning
             warning={"Dont have an Account? "}
             buttontxt={"Sign Up"}
