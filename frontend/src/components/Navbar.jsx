@@ -3,11 +3,29 @@ import { assets } from "../assets/assets";
 import HomeButtons from "./HomeButtons";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { isLoggedIn, userData, setUserData } = useContext(AppContext);
+  const { setIsLoggedIn, userData, setUserData } = useContext(AppContext);
+
+  const logout = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/logout"
+      );
+      toast.success(data.message);
+      localStorage.removeItem("AccessToken");
+      data.success && setIsLoggedIn(false);
+      data.success && setUserData(false);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -24,7 +42,10 @@ const Navbar = () => {
                       Verify Email
                     </li>
                   )}
-                  <li className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md ">
+                  <li
+                    className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md "
+                    onClick={logout}
+                  >
                     Logout
                   </li>
                 </ul>
