@@ -6,24 +6,36 @@ import Button from "../components/Button";
 import BottomWarning from "../components/BottomWarning";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const signInHandler = async () => {
-    await axios
-      .post("http://localhost:3000/api/v1/auth/signin", {
-        email,
-        password,
-      })
-      .then((response) => {
-        localStorage.setItem("accessToken", response.data.AccessToken);
+  async function signInHandler() {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
+      toast.success(data.message);
+      if (localStorage.getItem("AccessToken")) {
+        localStorage.removeItem("AccessToken");
+        localStorage.setItem("AccessToken", data.AccessToken);
         navigate("/");
-      });
-    navigate("/");
-  };
+      } else {
+        localStorage.setItem("AccessToken", data.AccessToken);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response.data.message);
+      }
+    }
+  }
 
   return (
     <>

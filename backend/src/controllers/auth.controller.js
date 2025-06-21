@@ -29,6 +29,7 @@ const signup = async (req, res) => {
 
     if (!username || !email || !password) {
       return res.status(402).json({
+        success: false,
         message: "All Fields are REQUIRED !!!",
       });
     }
@@ -58,17 +59,17 @@ const signup = async (req, res) => {
     if (!parseRequireBody.success) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Credentials !!!",
+        message: "Invalid Credentials !",
       });
     }
 
     // Finding User is alredy exists or not
-    const findUser = await findUserByEmailOrUsername(email, username);
+    const findUser = await findUserByEmailOrUsername(email);
 
     if (findUser) {
       return res.status(400).json({
         success: false,
-        message: "User Alredy Exists !!!",
+        message: "User Alredy Exists !",
       });
     }
 
@@ -109,11 +110,11 @@ const signup = async (req, res) => {
 
     if (!mailSentORNot) {
       return res.status(402).json({
-        message: "Error While sending Mail !!!",
+        message: "Error While sending Mail !",
       });
     }
 
-    res
+    return res
       .status(200)
       .cookie("accessToken", AccessToken, options)
       .cookie("refreshToken", RefreshToken, options)
@@ -125,7 +126,7 @@ const signup = async (req, res) => {
         RefreshToken,
       });
   } catch (error) {
-    res.status(401).json({
+    res.status(400).json({
       success: false,
       message: "Error While Creating User !!!",
       Error: error,
@@ -149,23 +150,16 @@ const signin = async (req, res) => {
   //  Send response
   try {
     // Taking inputs from body by user
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!email || !password) {
       return res.status(402).json({
-        message: "All Fields are REQUIRED !!!",
+        message: "All Fields are REQUIRED !",
       });
     }
 
     // Validating User Inputs
     const requireBody = zod.object({
-      username: zod
-        .string({
-          required_error: "Username is Required !!!",
-          invalid_type_error: "Username must be a String",
-        })
-        .min(3)
-        .max(50),
       email: zod
         .string({
           required_error: "Email is Required !!!",
@@ -185,17 +179,17 @@ const signin = async (req, res) => {
     if (!parseRequireBody.success) {
       return res.status(400).json({
         success: false,
-        message: "Credentials Incorrect !!!",
+        message: "Credentials Incorrect !",
       });
     }
 
     // Finding User is alredy exists or not
-    const user = await findUserByEmailOrUsername(email, username);
+    const user = await findUserByEmailOrUsername(email);
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Incorrect Email or Username !!!",
+        message: "Incorrect Email or Username !",
       });
     }
 
@@ -208,7 +202,7 @@ const signin = async (req, res) => {
     if (!comparedPassword) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Password !!!",
+        message: "Invalid Password !",
       });
     }
 
