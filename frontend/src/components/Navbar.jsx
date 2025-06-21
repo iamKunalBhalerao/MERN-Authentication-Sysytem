@@ -27,6 +27,23 @@ const Navbar = () => {
     }
   };
 
+  const sendVerificationOtp = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/sendverificationotp"
+      );
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/verifymail");
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <nav className="w-full bg-transparent flex fixed justify-between items-center py-3 px-6">
@@ -38,7 +55,10 @@ const Navbar = () => {
               <div className="absolute hidden group-hover:block top-2 right-2 z-10 text-black rounded-lg pt-10">
                 <ul className="list-none m-0 p-2 bg-gray-100 text-sm rounded-lg">
                   {!userData.IsemailVerified && (
-                    <li className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md">
+                    <li
+                      className="py-1 px-2 transition delay-100 duration-300 ease-in-out hover:bg-gray-200 cursor-pointer rounded-md"
+                      onClick={sendVerificationOtp}
+                    >
                       Verify Email
                     </li>
                   )}

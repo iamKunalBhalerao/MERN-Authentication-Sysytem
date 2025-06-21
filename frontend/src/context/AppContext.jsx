@@ -8,9 +8,10 @@ export const AppContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(false);
 
+  axios.defaults.withCredentials = true;
+
   const getAuthState = async () => {
     try {
-      axios.defaults.withCredentials = true;
       const { data } = await axios.get(
         "http://localhost:3000/api/v1/auth/is-auth"
       );
