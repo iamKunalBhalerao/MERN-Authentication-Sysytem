@@ -30,6 +30,11 @@ const ResetPassword = () => {
           email,
         },
         {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        },
+        {
           withCredentials: true,
         }
       );
@@ -66,6 +71,14 @@ const ResetPassword = () => {
           email,
           otp,
           newPassword,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        },
+        {
+          withCredentials: true,
         }
       );
       if (data.success) {

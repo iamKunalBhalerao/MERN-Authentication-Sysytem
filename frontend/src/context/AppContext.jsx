@@ -17,6 +17,11 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.get(
         "http://localhost:3000/api/v1/auth/is-auth",
         {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        },
+        {
           withCredentials: true,
         }
       );
@@ -37,6 +42,11 @@ export const AppContextProvider = (props) => {
     try {
       const { data } = await axios.get(
         "http://localhost:3000/api/v1/user/userdetails",
+        {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        },
         {
           withCredentials: true,
         }
