@@ -26,6 +26,11 @@ const Signup = () => {
           username,
           email,
           password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
       toast.success(data.message);
