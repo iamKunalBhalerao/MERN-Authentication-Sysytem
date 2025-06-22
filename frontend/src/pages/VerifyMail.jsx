@@ -25,6 +25,14 @@ const VerifyMail = () => {
         "http://localhost:3000/api/v1/auth/verifyotp",
         {
           otp,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("AccessToken"),
+          },
+        },
+        {
+          withCredentials: true,
         }
       );
       if (data.success) {

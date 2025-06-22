@@ -18,7 +18,7 @@ export const AppContextProvider = (props) => {
         "http://localhost:3000/api/v1/auth/is-auth",
         {
           headers: {
-            Authorization: localStorage.getItem("Authorization"),
+            Authorization: localStorage.getItem("AccessToken"),
           },
         },
         {
@@ -44,7 +44,7 @@ export const AppContextProvider = (props) => {
         "http://localhost:3000/api/v1/user/userdetails",
         {
           headers: {
-            Authorization: localStorage.getItem("Authorization"),
+            Authorization: localStorage.getItem("AccessToken"),
           },
         },
         {

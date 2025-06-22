@@ -31,7 +31,7 @@ const ResetPassword = () => {
         },
         {
           headers: {
-            Authorization: localStorage.getItem("Authorization"),
+            Authorization: localStorage.getItem("AccessToken"),
           },
         },
         {
@@ -74,7 +74,7 @@ const ResetPassword = () => {
         },
         {
           headers: {
-            Authorization: localStorage.getItem("Authorization"),
+            Authorization: localStorage.getItem("AccessToken"),
           },
         },
         {

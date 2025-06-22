@@ -36,6 +36,11 @@ const Navbar = () => {
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/auth/sendverificationotp",
         {
+          headers: {
+            Authorization: localStorage.getItem("AccessToken"),
+          },
+        },
+        {
           withCredentials: true,
         }
       );
