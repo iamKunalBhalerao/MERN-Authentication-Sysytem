@@ -71,14 +71,21 @@ This project demonstrates a modern, production-ready **authentication flow** for
 ## 📸 Screenshots
 
 - Home Page
-
+  ![Home Page](https://github.com/user-attachments/assets/b2e4d068-21b1-4fbe-9809-0e564a8e6dcb)
+  
 - Signup Page
+  ![SignUp Page](https://github.com/user-attachments/assets/04c93d73-c258-424c-b295-3bf348e4b212)
 
 - Signin Page
+  ![SignIn Page](https://github.com/user-attachments/assets/5cc4dc24-4f4f-4dc7-a02c-c5394895cff6)
 
 - verify Otp Page
+  ![Verify Otp Page](https://github.com/user-attachments/assets/8e516839-dc23-4fc4-a67d-0f306b337eed)
 
 - Reset Password flow
+  ![Reset Passwrod Email Page](https://github.com/user-attachments/assets/f06bd391-52bc-401d-a284-3a6934d35fce)
+  ![Reset Password Otp Page](https://github.com/user-attachments/assets/2a406f73-2ed3-4d1b-b5df-58374bc9143c)
+  ![Enter New Password Page](https://github.com/user-attachments/assets/d76fbef4-b03e-4fd3-b331-6a9af1a0cdc9)
 
 ---
 
