@@ -19,10 +19,13 @@ const Signin = () => {
   async function signInHandler() {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post("/api/v1/auth/signin", {
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
       toast.success(data.message);
       if (localStorage.getItem("AccessToken")) {
         localStorage.removeItem("AccessToken");

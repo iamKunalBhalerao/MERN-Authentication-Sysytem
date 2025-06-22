@@ -14,7 +14,9 @@ const Navbar = () => {
   const logout = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post("/api/v1/auth/logout");
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/logout"
+      );
       toast.success(data.message);
       localStorage.removeItem("AccessToken");
       data.success && setIsLoggedIn(false);
@@ -28,7 +30,9 @@ const Navbar = () => {
   const sendVerificationOtp = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post("/api/v1/auth/sendverificationotp");
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/sendverificationotp"
+      );
       if (data.success) {
         toast.success(data.message);
         navigate("/verifymail");

@@ -12,7 +12,9 @@ export const AppContextProvider = (props) => {
 
   const getAuthState = async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/is-auth");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/v1/auth/is-auth"
+      );
       if (data.success) {
         setIsLoggedIn(true);
         getUserData();
@@ -26,7 +28,9 @@ export const AppContextProvider = (props) => {
 
   async function getUserData() {
     try {
-      const { data } = await axios.get("/api/v1/user/userdetails");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/v1/user/userdetails"
+      );
       data.success ? setUserData(data.userData) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
