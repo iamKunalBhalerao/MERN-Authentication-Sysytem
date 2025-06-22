@@ -8,21 +8,11 @@ export const AppContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState("");
   const [userData, setUserData] = useState(false);
 
-  axios.defaults.withCredentials = true;
-
   const getAuthState = async () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/auth/is-auth",
-        {
-          headers: {
-            Authorization: localStorage.getItem("AccessToken"),
-          },
-        },
-        {
-          withCredentials: true,
-        }
+        "http://localhost:3000/api/v1/auth/is-auth"
       );
       if (data.success) {
         setIsLoggedIn(true);
@@ -39,15 +29,7 @@ export const AppContextProvider = (props) => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/user/userdetails",
-        {
-          headers: {
-            Authorization: localStorage.getItem("AccessToken"),
-          },
-        },
-        {
-          withCredentials: true,
-        }
+        "http://localhost:3000/api/v1/user/userdetails"
       );
       data.success ? setUserData(data.userData) : toast.error(data.message);
     } catch (error) {
