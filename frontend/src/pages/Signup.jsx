@@ -15,13 +15,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { setIsLoggedIn, getUserData } = useContext(AppContext);
+  const { setIsLoggedIn, getUserData, backendurl } = useContext(AppContext);
 
   async function signupHandler() {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/signup",
+        `${backendurl}/auth/signup`,
         {
           username,
           email,

@@ -9,17 +9,15 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { setIsLoggedIn, userData, setUserData } = useContext(AppContext);
+  const { setIsLoggedIn, userData, setUserData, backendurl } =
+    useContext(AppContext);
 
   const logout = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.post(`${backendurl}/auth/logout`, {
+        withCredentials: true,
+      });
       toast.success(data.message);
       localStorage.removeItem("AccessToken");
       data.success && setIsLoggedIn(false);
@@ -34,7 +32,7 @@ const Navbar = () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/sendverificationotp",
+        `${backendurl}/auth/sendverificationotp`,
         {
           headers: {
             Authorization: localStorage.getItem("AccessToken"),

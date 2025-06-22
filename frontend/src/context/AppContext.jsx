@@ -8,11 +8,16 @@ export const AppContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState("");
   const [userData, setUserData] = useState(false);
 
+  const backendurl = import.meta.env.VITE_API_URL;
+
   const getAuthState = async () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/auth/is-auth"
+        "http://localhost:3000/api/v1/auth/is-auth",
+        {
+          withCredentials: true,
+        }
       );
       if (data.success) {
         setIsLoggedIn(true);
@@ -29,7 +34,10 @@ export const AppContextProvider = (props) => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/user/userdetails"
+        "http://localhost:3000/api/v1/user/userdetails",
+        {
+          withCredentials: true,
+        }
       );
       data.success ? setUserData(data.userData) : toast.error(data.message);
     } catch (error) {
@@ -48,6 +56,7 @@ export const AppContextProvider = (props) => {
     setUserData,
     getUserData,
     getAuthState,
+    backendurl,
   };
 
   return (

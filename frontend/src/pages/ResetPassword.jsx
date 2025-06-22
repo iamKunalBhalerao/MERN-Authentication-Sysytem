@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AuthSubHeading from "../components/AuthSubHeading";
 import AuthHeading from "../components/AuthHeading";
 import Input from "../components/Input";
@@ -6,9 +6,11 @@ import Button from "../components/Button";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const ResetPassword = () => {
   axios.defaults.withCredentials = true;
+  const { backendurl } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -25,7 +27,7 @@ const ResetPassword = () => {
     try {
       e.preventDefault();
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/sendresetotp",
+        `${backendurl}/auth/sendresetotp`,
         {
           email,
         },

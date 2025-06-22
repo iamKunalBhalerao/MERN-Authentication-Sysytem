@@ -11,7 +11,8 @@ import { AppContext } from "../context/AppContext";
 const VerifyMail = () => {
   const navigate = useNavigate();
 
-  const { getUserData, isLoggedIn, userData } = useContext(AppContext);
+  const { getUserData, isLoggedIn, userData, backendurl } =
+    useContext(AppContext);
 
   const inputRefs = useRef([]);
 
@@ -22,7 +23,7 @@ const VerifyMail = () => {
       const otpArray = inputRefs.current.map((e) => e.value);
       const otp = otpArray.join("");
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/verifyotp",
+        `${backendurl}/auth/verifyotp`,
         {
           otp,
         },
