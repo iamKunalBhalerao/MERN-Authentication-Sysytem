@@ -68,7 +68,7 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/verifyotpandresetpassword",
+        `${backendurl}/auth/verifyotpandresetpassword`,
         {
           email,
           otp,
