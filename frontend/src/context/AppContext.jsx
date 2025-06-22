@@ -13,7 +13,7 @@ export const AppContextProvider = (props) => {
   const getAuthState = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.get(`${backendurl}/api/v1/auth/is-auth`, {
+      const { data } = await axios.get(`${backendurl}/auth/is-auth`, {
         withCredentials: true,
       });
       if (data.success) {
@@ -30,12 +30,9 @@ export const AppContextProvider = (props) => {
   async function getUserData() {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.get(
-        `${backendurl}/api/v1/user/userdetails`,
-        {
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.get(`${backendurl}/user/userdetails`, {
+        withCredentials: true,
+      });
       data.success ? setUserData(data.userData) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
