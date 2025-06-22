@@ -36,9 +36,8 @@ export const AppContextProvider = (props) => {
   };
 
   async function getUserData() {
-    axios.defaults.withCredentials = true;
-
     try {
+      axios.defaults.withCredentials = true;
       const { data } = await axios.get(
         "http://localhost:3000/api/v1/user/userdetails",
         {
