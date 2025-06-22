@@ -24,12 +24,9 @@ const ResetPassword = () => {
   const sendOtpHandler = async (e) => {
     try {
       e.preventDefault();
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/sendresetotp",
-        {
-          email,
-        }
-      );
+      const { data } = await axios.post("/api/v1/auth/sendresetotp", {
+        email,
+      });
       if (data.success) {
         toast.success(data.message);
         setIsEmailSent(true);
@@ -58,7 +55,7 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/verifyotpandresetpassword",
+        "/api/v1/auth/verifyotpandresetpassword",
         {
           email,
           otp,

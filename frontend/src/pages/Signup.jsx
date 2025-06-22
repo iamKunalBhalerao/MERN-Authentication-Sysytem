@@ -20,14 +20,11 @@ const Signup = () => {
   async function signupHandler() {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/signup",
-        {
-          username,
-          email,
-          password,
-        }
-      );
+      const { data } = await axios.post("/api/v1/auth/signup", {
+        username,
+        email,
+        password,
+      });
       toast.success(data.message);
       localStorage.setItem("AccessToken", data.AccessToken);
       setIsLoggedIn(true);

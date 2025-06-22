@@ -21,12 +21,9 @@ const VerifyMail = () => {
       axios.defaults.withCredentials = true;
       const otpArray = inputRefs.current.map((e) => e.value);
       const otp = otpArray.join("");
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/verifyotp",
-        {
-          otp,
-        }
-      );
+      const { data } = await axios.post("/api/v1/auth/verifyotp", {
+        otp,
+      });
       if (data.success) {
         toast.success(data.message);
         getUserData();
