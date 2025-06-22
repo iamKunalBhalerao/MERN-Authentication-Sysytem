@@ -28,6 +28,9 @@ const ResetPassword = () => {
         "http://localhost:3000/api/v1/auth/sendresetotp",
         {
           email,
+        },
+        {
+          withCredentials: true,
         }
       );
       if (data.success) {

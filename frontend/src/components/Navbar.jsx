@@ -15,7 +15,10 @@ const Navbar = () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/logout"
+        "http://localhost:3000/api/v1/auth/logout",
+        {
+          withCredentials: true,
+        }
       );
       toast.success(data.message);
       localStorage.removeItem("AccessToken");
@@ -31,7 +34,10 @@ const Navbar = () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/sendverificationotp"
+        "http://localhost:3000/api/v1/auth/sendverificationotp",
+        {
+          withCredentials: true,
+        }
       );
       if (data.success) {
         toast.success(data.message);

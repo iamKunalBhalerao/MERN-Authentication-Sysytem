@@ -24,6 +24,9 @@ const Signin = () => {
         {
           email,
           password,
+        },
+        {
+          withCredentials: true,
         }
       );
       toast.success(data.message);
